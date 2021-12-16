@@ -8,8 +8,12 @@ using System;
 public class CropScript : MonoBehaviour
 {
     public TMP_InputField tinggi, lebar;
-    int cTinggi, cLebar;
-    public RawImage cropImage;
+    public float cTinggi, cLebar;
+    public RawImage cropImage, originalImage, resultImage;
+
+    // For saving to the _savepath
+    string _SavePath = Application.streamingAssetsPath + "/"; //Change the path here!
+    int _CaptureCounter = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -20,9 +24,51 @@ public class CropScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cTinggi = Int32.Parse(tinggi.text);
-        cLebar = Int32.Parse(lebar.text);
+        if(tinggi.text != "")
+        {
+            cTinggi = float.Parse(tinggi.text);
+        }
+        else
+        {
+            cLebar = cropImage.rectTransform.rect.height;
+        }
+
+        if (lebar.text != "")
+        {
+            cLebar = float.Parse(lebar.text);
+        }
+        else
+        {
+            cLebar = cropImage.rectTransform.rect.width;
+        }
+
         var a = cropImage.GetComponent<RectTransform>();
         a.sizeDelta = new Vector2(cLebar, cTinggi);
+    }
+
+    public void Cropping()
+    {
+        Texture2D croppedTexture = new Texture2D((int)cropImage.rectTransform.rect.width, (int)cropImage.rectTransform.rect.height);
+        Texture2D originalTexture = (Texture2D)originalImage.mainTexture;
+        Texture2D originalTextureResized = ResizeTexture2D(originalTexture, (int)originalImage.rectTransform.rect.width, (int)originalImage.rectTransform.rect.height);
+        croppedTexture.SetPixels(originalTextureResized.GetPixels((int)cropImage.rectTransform.anchoredPosition.x, (int)cropImage.rectTransform.anchoredPosition.y, (int)cropImage.rectTransform.rect.width, (int)cropImage.rectTransform.rect.height));
+        croppedTexture.Apply();
+        resultImage.texture = croppedTexture;
+
+        System.IO.File.WriteAllBytes(_SavePath + _CaptureCounter.ToString() + ".png", croppedTexture.EncodeToPNG());
+        ++_CaptureCounter;
+
+        Debug.Log("RESULT CROP");
+    }
+
+    Texture2D ResizeTexture2D(Texture2D originalTexture, int resizedWidth, int resizedHeight)
+    {
+        RenderTexture renderTexture = new RenderTexture(resizedWidth, resizedHeight, 32);
+        RenderTexture.active = renderTexture;
+        Graphics.Blit(originalTexture, renderTexture);
+        Texture2D resizedTexture = new Texture2D(resizedWidth, resizedWidth);
+        resizedTexture.ReadPixels(new Rect(0, 0, resizedWidth, resizedHeight), 0, 0);
+        resizedTexture.Apply();
+        return resizedTexture;
     }
 }

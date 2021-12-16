@@ -18,14 +18,12 @@ public class WebCam : MonoBehaviour
     string _SavePath = Application.streamingAssetsPath + "/"; //Change the path here!
     int _CaptureCounter = 0;
 
+    public int cameraInt = 0;
+
     // Use this for initialization
     void Start () {
-        WebCamDevice[] devices = WebCamTexture.devices;
-        deviceName = devices[0].name;
-        wct = new WebCamTexture(deviceName, 400, 300, 12);
-        GetComponent<Renderer>().material.mainTexture = wct;
-        wct.Play();
-   }
+        CameraDevice();
+    }
  
    public void TakeSnapshot()
    {
@@ -38,8 +36,30 @@ public class WebCam : MonoBehaviour
         test.GetComponent<RawImage>().texture = snap;
         heightmap = snap;
 
-        System.IO.File.WriteAllBytes(_SavePath + _CaptureCounter.ToString() + ".png", snap.EncodeToPNG());
-        ++_CaptureCounter;
+        //System.IO.File.WriteAllBytes(_SavePath + _CaptureCounter.ToString() + ".png", snap.EncodeToPNG());
+        //++_CaptureCounter;
    }
+    
+   public void ChangeCamera()
+    {
+        cameraInt++;
+        wct.Stop();
+        CameraDevice();
+    }
 
+    public void CameraDevice()
+    {
+        WebCamDevice[] devices = WebCamTexture.devices;
+
+        if (cameraInt >= devices.Length - 1)
+        {
+            Debug.Log("CAMERA INT : " + cameraInt);
+            cameraInt = 0;
+        }
+
+        deviceName = devices[cameraInt].name;
+        wct = new WebCamTexture(deviceName, 400, 300, 12);
+        GetComponent<Renderer>().material.mainTexture = wct;
+        wct.Play();
+    }
 }
