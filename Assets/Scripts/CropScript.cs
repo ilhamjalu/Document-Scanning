@@ -15,6 +15,8 @@ public class CropScript : MonoBehaviour
     string _SavePath = Application.streamingAssetsPath + "/"; //Change the path here!
     int _CaptureCounter = 0;
 
+    public Slider sliderHeight, sliderWidth;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,26 +26,28 @@ public class CropScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(tinggi.text != "")
-        {
-            cTinggi = float.Parse(tinggi.text);
-        }
-        else
-        {
-            cLebar = cropImage.rectTransform.rect.height;
-        }
+        //var tinggiCrop = cropImage.rectTransform.rect.height;
 
-        if (lebar.text != "")
-        {
-            cLebar = float.Parse(lebar.text);
-        }
-        else
-        {
-            cLebar = cropImage.rectTransform.rect.width;
-        }
+        //if(tinggi.text != "")
+        //{
+        //    cTinggi = float.Parse(tinggi.text);
+        //}
+        //else
+        //{
+        //    cLebar = cropImage.rectTransform.rect.height;
+        //}
+
+        //if (lebar.text != "")
+        //{
+        //    cLebar = float.Parse(lebar.text);
+        //}
+        //else
+        //{
+        //    cLebar = cropImage.rectTransform.rect.width;
+        //}
 
         var a = cropImage.GetComponent<RectTransform>();
-        a.sizeDelta = new Vector2(cLebar, cTinggi);
+        a.sizeDelta = new Vector2(sliderWidth.value, sliderHeight.value);
     }
 
     public void Cropping()
