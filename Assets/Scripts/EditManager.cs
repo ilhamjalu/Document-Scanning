@@ -11,6 +11,8 @@ public class EditManager : MonoBehaviour
     public GameObject cameraObj;
     public Button button;
 
+    public GameObject successPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,13 +28,21 @@ public class EditManager : MonoBehaviour
     public void EditButtonName()
     {
         button.GetComponentInChildren<TextMeshProUGUI>().SetText(buttonName.text);
+
         buttonName.text = "";
-        ClosePanel();
+
+        ClosePanel(editPanel);
     }
 
-    public void ClosePanel()
+    public void ClosePanel(GameObject hideObj)
     {
-        editPanel.SetActive(false);
+        hideObj.SetActive(false);
         cameraObj.SetActive(true);
+    }
+    
+    public void OpenPanel(GameObject showObj)
+    {
+        showObj.SetActive(true);
+        cameraObj.SetActive(false);
     }
 }

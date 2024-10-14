@@ -15,7 +15,7 @@ public class ButtonEdit : MonoBehaviour
     {
         editManager = FindObjectOfType<EditManager>();
         editPanel =  editManager.editPanel;
-        gameObject.GetComponent<Button>().onClick.AddListener(OpenEditPanel);
+        gameObject.GetComponent<Button>().onClick.AddListener(SetEditPanel);
     }
 
     // Update is called once per frame
@@ -24,10 +24,9 @@ public class ButtonEdit : MonoBehaviour
         
     }
 
-    public void OpenEditPanel()
+    void SetEditPanel()
     {
+        editManager.OpenPanel(editPanel);
         editManager.button = mainButton;
-        editManager.cameraObj.SetActive(false);
-        editPanel.SetActive(true);
     }
 }

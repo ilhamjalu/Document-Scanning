@@ -11,9 +11,13 @@ public class SaveFile : MonoBehaviour
     public string saveDirectory;
     public RawImage resultImage;
 
+    public EditManager editManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        editManager = FindObjectOfType<EditManager>();
+
         resultImage = GameObject.Find("RawImage").GetComponent<RawImage>();
         gameObject.GetComponent<Button>().onClick.AddListener(OpenFolderPicker);
     }
@@ -35,12 +39,11 @@ public class SaveFile : MonoBehaviour
                 saveDirectory = paths[0];
                 Debug.Log("Selected save directory: " + saveDirectory);
 
+                if (resultImage.texture != null && resultImage.texture.name != "Group 21")
+                {
+                    SaveTexture();
+                }
             }
-        }
-
-        if (resultImage.texture != null)
-        {
-            SaveTexture();
         }
     }
 
@@ -53,6 +56,9 @@ public class SaveFile : MonoBehaviour
         string fullPath = Path.Combine(saveDirectory, GetUniqueFileName(gameObject.transform.GetComponentInChildren<TextMeshProUGUI>().text, ".PNG"));
 
         File.WriteAllBytes(fullPath, bytes);
+
+        editManager.OpenPanel(editManager.successPanel);
+
         Debug.Log("Texture saved at: " + fullPath);
     }
 
@@ -69,5 +75,4 @@ public class SaveFile : MonoBehaviour
 
         return fileName;
     }
-
 }
