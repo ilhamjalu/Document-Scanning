@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Windows.Forms;
 
 public class ButtonManager : MonoBehaviour
 {
@@ -26,10 +25,10 @@ public class ButtonManager : MonoBehaviour
 
     public void SpawnListener()
     {
-        SpawnButton(int.Parse(totalButton.text));
+        SpawnButton(int.Parse(totalButton.text), null, null);
     }
 
-    public void SpawnButton(int increment)
+    public void SpawnButton(int increment, List<string> name, List<string> path)
     {
         foreach(Transform t in buttonParent.transform)
         {
@@ -43,6 +42,13 @@ public class ButtonManager : MonoBehaviour
             temp.transform.parent = buttonParent;
             temp.transform.localScale = Vector3.one;
             temp.transform.localPosition = Vector3.zero;
+
+            if(name != null && path != null)
+            {
+                temp.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>().text = name[i];
+                temp.transform.GetChild(1).GetComponentInChildren<SaveFile>().saveDirectory = path[i];
+            }
+
         }
     }
 
@@ -50,7 +56,8 @@ public class ButtonManager : MonoBehaviour
     {
         for(int i = 0;i < buttonsName.Count;i++)
         {
-            buttonParent.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = buttonsName[i]; 
+            Debug.Log("total : " + buttonsName.Count + " " + buttonsName[i]);
+            buttonParent.transform.GetChild(i).GetChild(1).GetComponentInChildren<TextMeshProUGUI>().SetText(buttonsName[i]); 
         }
     }
 

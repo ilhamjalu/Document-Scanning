@@ -37,13 +37,13 @@ public class SaveFile : MonoBehaviour
             if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
             {
                 saveDirectory = paths[0];
-                Debug.Log("Selected save directory: " + saveDirectory);
-
-                if (resultImage.texture != null && resultImage.texture.name != "Group 21")
-                {
-                    SaveTexture();
-                }
+                Debug.Log("Selected save directory: " + saveDirectory); 
             }
+        }
+
+        if (saveDirectory != "" && resultImage.texture.name != "Group 21")
+        {
+            SaveTexture();
         }
     }
 
