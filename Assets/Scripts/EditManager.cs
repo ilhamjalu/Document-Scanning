@@ -12,17 +12,16 @@ public class EditManager : MonoBehaviour
     public Button button;
 
     public GameObject successPanel;
+    public GameObject failedPanel;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public TextMeshProUGUI directoryText;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if(editPanel.activeInHierarchy)
+        {
+            SetDirectoryText();
+        }
     }
 
     public void EditButtonName()
@@ -32,6 +31,24 @@ public class EditManager : MonoBehaviour
         buttonName.text = "";
 
         ClosePanel(editPanel);
+    }
+
+    public void SetDirectoryText()
+    {
+        string directory = button.GetComponent<SaveFile>().saveDirectory;
+        if (directory != "")
+        {
+            directoryText.text = button.GetComponent<SaveFile>().saveDirectory;
+        }
+        else
+        {
+            directoryText.text = "Save Directory";
+        }
+    }
+
+    public void EditDirectory()
+    {
+        button.GetComponent<SaveFile>().OpenFolderPicker();
     }
 
     public void ClosePanel(GameObject hideObj)

@@ -19,47 +19,41 @@ public class SaveFile : MonoBehaviour
         editManager = FindObjectOfType<EditManager>();
 
         resultImage = GameObject.Find("RawImage").GetComponent<RawImage>();
-        gameObject.GetComponent<Button>().onClick.AddListener(OpenFolderPicker);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        gameObject.GetComponent<Button>().onClick.AddListener(SaveTexture);
     }
 
     public void OpenFolderPicker()
     {
-        if(saveDirectory == "")
-        {
-            var paths = StandaloneFileBrowser.OpenFolderPanel("Select Folder", "", false);
+        var paths = StandaloneFileBrowser.OpenFolderPanel("Select Folder", "", false);
 
-            if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
-            {
-                saveDirectory = paths[0];
-                Debug.Log("Selected save directory: " + saveDirectory); 
-            }
-        }
-
-        if (saveDirectory != "" && resultImage.texture.name != "Group 21")
+        if (paths.Length > 0 && !string.IsNullOrEmpty(paths[0]))
         {
-            SaveTexture();
+            saveDirectory = paths[0];
+            Debug.Log("Selected save directory: " + saveDirectory); 
         }
     }
 
     public void SaveTexture()
     {
-        Texture2D temp = resultImage.texture as Texture2D;
+        if(saveDirectory != "" && resultImage.texture.isReadable)
+        {
+            Texture2D temp = resultImage.texture as Texture2D;
 
-        byte[] bytes = temp.EncodeToPNG();
+            byte[] bytes = temp.EncodeToPNG();
 
-        string fullPath = Path.Combine(saveDirectory, GetUniqueFileName(gameObject.transform.GetComponentInChildren<TextMeshProUGUI>().text, ".PNG"));
+            string fullPath = Path.Combine(saveDirectory, GetUniqueFileName(gameObject.transform.GetComponentInChildren<TextMeshProUGUI>().text, ".PNG"));
 
-        File.WriteAllBytes(fullPath, bytes);
+            File.WriteAllBytes(fullPath, bytes);
 
-        editManager.OpenPanel(editManager.successPanel);
+            editManager.OpenPanel(editManager.successPanel);
 
-        Debug.Log("Texture saved at: " + fullPath);
+            Debug.Log("Texture saved at: " + fullPath);
+        }
+        else
+        {
+            editManager.OpenPanel(editManager.failedPanel);
+        }
+        
     }
 
     string GetUniqueFileName(string baseName, string extension)

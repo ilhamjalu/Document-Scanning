@@ -37,8 +37,9 @@ public class SaveConfiguration : MonoBehaviour
         config.totalButton = buttonManager.buttonParent.childCount;
 
         config.buttonsName.Clear();
+        config.buttonsPath.Clear();
 
-        for(int i = 0; i < buttonManager.buttonParent.childCount; i++)
+        for (int i = 0; i < buttonManager.buttonParent.childCount; i++)
         {
             Debug.Log(buttonManager.buttonParent.GetChild(i).GetChild(1).name);
 
