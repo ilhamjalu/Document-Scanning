@@ -19,6 +19,9 @@ public class SaveFile : MonoBehaviour
         editManager = FindObjectOfType<EditManager>();
 
         resultImage = GameObject.Find("RawImage").GetComponent<RawImage>();
+
+        gameObject.GetComponent<Button>().onClick.AddListener(editManager.cameraObj.GetComponent<WebCam>().TakeSnapshot);
+
         gameObject.GetComponent<Button>().onClick.AddListener(SaveTexture);
     }
 
